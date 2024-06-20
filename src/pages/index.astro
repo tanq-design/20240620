@@ -1,5 +1,6 @@
 ---
 import DisplayList from '../components/DisplayList.vue'
+import InputForm from '../components/InputForm.vue'
 ---
 
 <html lang="en">
@@ -12,6 +13,7 @@ import DisplayList from '../components/DisplayList.vue'
 	</head>
 	<body>
 		<h1>Astro</h1>
+		<InputForm client:load></InputForm>
 		<DisplayList client:load></DisplayList>
 	</body>
 </html>
