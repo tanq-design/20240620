@@ -1,6 +1,5 @@
 import { drizzle } from 'drizzle-orm/d1';
 import { memos } from "../../db/schema";
-import type { APIContext } from 'astro';
 import type { Runtime } from '@astrojs/cloudflare';
 
 interface PostData {
@@ -39,6 +38,7 @@ export async function POST({ request, locals }: { request: Request, locals: Runt
             status: 500,
         });
     }
+    
     const title = message.title;
     const content = message.content;
     const envDB = locals.runtime.env.DB as D1Database;

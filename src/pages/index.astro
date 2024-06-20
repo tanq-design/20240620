@@ -1,8 +1,6 @@
 ---
-import DisplayList from '../components/DisplayList.vue'
-import InputForm from '../components/InputForm.vue'
+import VueCompo from "../components/VueCompo.vue"
 ---
-
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -13,7 +11,6 @@ import InputForm from '../components/InputForm.vue'
 	</head>
 	<body>
 		<h1>Astro</h1>
-		<InputForm client:load></InputForm>
-		<DisplayList client:load></DisplayList>
+		<VueCompo client:load/>
 	</body>
 </html>

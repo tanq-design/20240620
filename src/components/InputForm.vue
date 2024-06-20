@@ -4,6 +4,7 @@ import { ref } from 'vue'
 const title = defineModel('title');
 const content = defineModel('content');
 const message = ref("入力してください");
+const emit = defineEmits(['submit'])
 
 async function submitData() {
     const jsonbody = { title: title.value, content: content.value };
@@ -19,6 +20,8 @@ async function submitData() {
             message.value = "記録しました";
             title.value = "";
             content.value = "";
+
+            emit('submit');
         })
         .catch((error) => {
             message.value = `記録に失敗しました<${error}>`;

@@ -14,6 +14,12 @@ async function getMemos() {
         memos.value = json.body.memos;
     }
 }
+
+function updateList() {
+    getMemos();
+}
+
+defineExpose({ updateList });
 </script>
 
 <template>
