@@ -2,3 +2,4 @@
 binding = "DB" # i.e. available in your Worker on env.DB
 database_name = "DB20240620"
 database_id = "f8a82ad4-136a-494e-ab9e-d8377d2f4484"
+# preview_database_id = "DB" # Required for Pages local development
