@@ -1,9 +1,6 @@
 ---
 import VueCompo from "../components/VueCompo.vue";
 import { SignIn, SignOut } from "auth-astro/components";
-import { getSession } from "auth-astro/server";
-
-const session = await getSession(Astro.request);
 ---
 
 <html lang="en">
@@ -16,19 +13,6 @@ const session = await getSession(Astro.request);
 	</head>
 	<body>
 		<h1>Astro</h1>
-		<div>
-			<SignIn provider="github">SignIn</SignIn>
-			<SignOut>SignOut</SignOut>
-			<div>
-				{
-					session ? (
-						<p>Welcome {session.user?.name}</p>
-					) : (
-						<p>Not logged in</p>
-					)
-				}
-			</div>
-		</div>
 		<VueCompo client:load />
 	</body>
 </html>
