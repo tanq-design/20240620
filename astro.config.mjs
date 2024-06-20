@@ -7,5 +7,8 @@ import cloudflare from "@astrojs/cloudflare";
 export default defineConfig({
   integrations: [vue()],
   output: "server",
-  adapter: cloudflare()
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },})
 });
