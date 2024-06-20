@@ -24,3 +24,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+drizzle/0000_mean_king_bedlam.sql
+drizzle/meta/_journal.json
+drizzle/meta/0000_snapshot.json
