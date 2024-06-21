@@ -5,8 +5,6 @@ import type { APIContext } from "astro";
 import { oursession } from "../../../db/schema";
 import { eq } from 'drizzle-orm';
 import { GitHub } from "arctic";
-import { options } from "@astrojs/check/dist/options";
-import type { addAttribute } from "astro/compiler-runtime";
 import type { Auth } from "lucia"
 import { generateRandomString } from "lucia/utils";
 
@@ -80,7 +78,7 @@ export async function GET(context: APIContext): Promise<Response> {
 
 		const envDB = context.locals.runtime.env.DB as D1Database
 		const db = drizzle(envDB);
-		const res = await db.insert(oursession).values({
+		await db.insert(oursession).values({
 			id: userId,
 			github_id: Number(githubUser.id),
 			username: githubUser.login

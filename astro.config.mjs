@@ -9,8 +9,7 @@ export default defineConfig({
   adapter: cloudflare({
     platformProxy: {
       enabled: true
-    },
-    mode: "directory"
+    }
   }),
 	security: {
 		checkOrigin: true
