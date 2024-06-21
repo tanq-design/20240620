@@ -29,7 +29,7 @@ export async function GET(context: APIContext): Promise<Response> {
 	try {
 		const tokens = await github.validateAuthorizationCode(code);
 		console.log("tokens", JSON.stringify(tokens));
-		const githubUser = await fetch("https://api.github.com/user", {
+		const githubUser: GitHubUser = await fetch("https://api.github.com/user", {
 			headers: {
 				Accept: "application/vnd.github+json",
 				"User-Agent": "oauth-test",
