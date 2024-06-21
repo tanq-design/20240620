@@ -38,10 +38,10 @@ export async function GET(context: APIContext): Promise<Response> {
 			  console.error(res.status, await res.json());
 			  throw new Error("failed to get github user");
 			}
-			return res;
+			return res.json();
 		  });
 		console.log("githubUserResponse", JSON.stringify(githubUserResponse));
-		const githubUser: GitHubUser = await githubUserResponse.json();
+		const githubUser: GitHubUser = githubUserResponse;
 		console.log("githubUser", JSON.stringify(githubUser));
 
 		const envDB = context.locals.runtime.env.DB as D1Database
