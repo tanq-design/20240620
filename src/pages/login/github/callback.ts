@@ -14,7 +14,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		context.locals.runtime.env.GITHUB_CLIENT_SECRET as string
 	);
 
-	console.log("github", github);
+	console.log("github", JSON.stringify(github));
 
 	const code = context.url.searchParams.get("code");
 	const state = context.url.searchParams.get("state");
@@ -32,15 +32,15 @@ export async function GET(context: APIContext): Promise<Response> {
 				Authorization: `Bearer ${tokens.accessToken}`
 			}
 		});
-		console.log("githubUserResponse", githubUserResponse);
+		console.log("githubUserResponse", JSON.stringify(githubUserResponse));
 		const githubUser: GitHubUser = await githubUserResponse.json();
-		console.log("githubUser", githubUser);
+		console.log("githubUser", JSON.stringify(githubUser));
 
 		const envDB = context.locals.runtime.env.DB as D1Database
 		const db = drizzle(envDB);
 		// @ts-ignore
 		const existingUser = await db.select().from(sessions).where(eq(sessions.github_id, githubUser.id));
-		console.log("existingUser", existingUser);
+		console.log("existingUser", JSON.stringify(existingUser));
 		if (Array.isArray(existingUser) && existingUser[0] && existingUser[0].hasOwnProperty('id')) {
 			const session = await lucia.createSession(existingUser[0].id, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
