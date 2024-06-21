@@ -72,7 +72,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		console.log("user", JSON.stringify(user));
 
 		if (user) {
-			const session = await lucia.createSession({ userId: user.id, attributes:{} });
+			const session = await lucia.createSession({ userId: user.userId, attributes:{} });
 			
 			const sessionCookie = lucia.createSessionCookie(session);
 			context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
