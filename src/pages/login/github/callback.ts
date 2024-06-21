@@ -14,10 +14,14 @@ export async function GET(context: APIContext): Promise<Response> {
 		context.locals.runtime.env.PROD,
 	);
 
+	console.log("lucia", JSON.stringify(lucia));
+
 	const github = new GitHub(
 		context.locals.runtime.env.GITHUB_CLIENT_ID as string,
 		context.locals.runtime.env.GITHUB_CLIENT_SECRET as string
 	);
+
+	console.log("github", JSON.stringify(github));
 
 	const code = context.url.searchParams.get("code");
 	const state = context.url.searchParams.get("state");

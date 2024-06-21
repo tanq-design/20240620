@@ -14,6 +14,7 @@ export const oursession = sqliteTable('oursession', {
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
+  username: text('username'),
 });
 
 export const session = sqliteTable('session', {
