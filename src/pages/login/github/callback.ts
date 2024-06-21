@@ -34,6 +34,7 @@ export async function GET(context: APIContext): Promise<Response> {
 				Authorization: `Bearer ${tokens.accessToken}`
 			}
 		}).then(async (res) => {
+			console.log(JSON.stringify(res));
 			if (!res.ok) {
 			  console.error(res.status, await res.json());
 			  throw new Error("failed to get github user");
