@@ -2,8 +2,8 @@
 import VueCompo from "../components/VueCompo.vue";
 import AuthCompo from "../components/AuthCompo.vue";
 
-const user = Astro.locals.user;
-console.log("astro", user);
+const session = Astro.locals.session;
+console.log("astro", session);
 ---
 
 <html lang="en">
@@ -18,7 +18,7 @@ console.log("astro", user);
 		<h1>Astro</h1>
 		<div>
 		</div>
-		<AuthCompo user={user} client:load />
+		<AuthCompo user={session} client:load />
 		<VueCompo client:load />
 	</body>
 </html>

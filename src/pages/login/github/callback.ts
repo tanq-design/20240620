@@ -11,7 +11,7 @@ import type { Auth } from "lucia"
 import { generateRandomString } from "lucia/utils";
 
 export async function GET(context: APIContext): Promise<Response> {
-	const lucia: Lucia = initializeLucia(
+	const lucia : Auth = initializeLucia(
 		context.locals.runtime.env.DB as D1Database,
 		context.locals.runtime.env.PROD,
 	);
@@ -48,62 +48,46 @@ export async function GET(context: APIContext): Promise<Response> {
 		});
 
 		const getUser = async () => {
+			const envDB = context.locals.runtime.env.DB as D1Database
+			const db = drizzle(envDB);
+			// @ts-ignore
 			const existingUser = await db.select().from(oursession).where(eq(oursession.github_id, githubUser.id));
 
 			if (Array.isArray(existingUser) && existingUser[0] && existingUser[0].hasOwnProperty('id')) {
 				return existingUser[0];
 			}
 			const user = await lucia.createUser({
+				key: null,
 				attributes: {
 					username: githubUser.login
 				}
 			});
 			return user;
 		};
-		const envDB = context.locals.runtime.env.DB as D1Database
-		const db = drizzle(envDB);
-		// @ts-ignore
-		//const existingUser = await db.select().from(oursession).where(eq(oursession.github_id, githubUser.id));
 
 		const user = await getUser();
-		console.log("user", user);
 
-		//console.log("existingUser", existingUser);
 		if (user) {
-			//const session = await lucia.createSession(existingUser[0].id, {});
-			const session = await lucia.createSession({ userId: user.id });
-			console.log("session", session);
-
+			const session = await lucia.createSession({ userId: user.id, attributes:{} });
+			
 			const sessionCookie = lucia.createSessionCookie(session);
-			/*
-			if(sessionCookie.attributes.secure === "false") {
-				sessionCookie.attributes.secure = false;
-			} else {
-				sessionCookie.attributes.secure = true;
-			}
-			*/
-			console.log("session", session);
-			console.log("sessionCookie", sessionCookie);
 			context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-
-
-			console.log("auth_", context.cookies.get("auth_session")?.value);
+			
 			return context.redirect("/");
 		}
 
 		const userId = generateRandomString(10); // 16 characters long
-		console.log(111111, userId);
 
+		const envDB = context.locals.runtime.env.DB as D1Database
+		const db = drizzle(envDB);
 		const res = await db.insert(oursession).values({
 			id: userId,
 			github_id: Number(githubUser.id),
 			username: githubUser.login
 		});
 
-		const session = await lucia.createSession({ userId: userId });
+		const session = await lucia.createSession({ userId: userId, attributes: {} });
 		const sessionCookie = lucia.createSessionCookie(session.id);
-
-		console.log(999999, session, sessionCookie);
 
 		context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		return context.redirect("/");
