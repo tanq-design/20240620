@@ -29,7 +29,9 @@ export async function GET(context: APIContext): Promise<Response> {
 
 		const envDB = context.locals.runtime.env.DB as D1Database
 		const db = drizzle(envDB);
-		const existingUser = await db.select().from(sessions);
+		// @ts-ignore
+		const existingUser = await db.select().from(sessions).where(eq(sessions.github_id, githubUser.id));
+		console.log(existingUser);
 
 		if (Array.isArray(existingUser) && existingUser[0] && existingUser[0].hasOwnProperty('id')) {
 			const session = await lucia.createSession(existingUser[0].id, {});
