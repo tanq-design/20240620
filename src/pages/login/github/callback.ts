@@ -28,6 +28,7 @@ export async function GET(context: APIContext): Promise<Response> {
 
 	try {
 		const tokens = await github.validateAuthorizationCode(code);
+		console.log("tokens", JSON.stringify(tokens));
 		const githubUserResponse = await fetch("https://api.github.com/user", {
 			headers: {
 				Authorization: `Bearer ${tokens.accessToken}`
