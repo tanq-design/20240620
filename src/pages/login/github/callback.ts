@@ -32,8 +32,9 @@ export async function GET(context: APIContext): Promise<Response> {
 				Authorization: `Bearer ${tokens.accessToken}`
 			}
 		});
+		console.log("githubUserResponse", githubUserResponse);
 		const githubUser: GitHubUser = await githubUserResponse.json();
-		console.log(githubUser);
+		console.log("githubUser", githubUser);
 
 		const envDB = context.locals.runtime.env.DB as D1Database
 		const db = drizzle(envDB);
