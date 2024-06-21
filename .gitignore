@@ -4,6 +4,7 @@ dist/
 .astro/
 .wrangler/
 .drizzle/
+drizzle/
 
 # dependencies
 node_modules/
