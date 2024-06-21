@@ -1,5 +1,6 @@
 ---
 import VueCompo from "../components/VueCompo.vue";
+import AuthCompo from "../components/AuthCompo.vue";
 ---
 
 <html lang="en">
@@ -12,6 +13,10 @@ import VueCompo from "../components/VueCompo.vue";
 	</head>
 	<body>
 		<h1>Astro</h1>
+		<div>
+			<a href="/login/github">Sign in with GitHub</a>
+		</div>
+		<AuthCompo client:load />
 		<VueCompo client:load />
 	</body>
 </html>
