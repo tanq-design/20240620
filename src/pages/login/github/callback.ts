@@ -31,7 +31,8 @@ export async function GET(context: APIContext): Promise<Response> {
 		console.log("tokens", JSON.stringify(tokens));
 		const githubUserResponse = await fetch("https://api.github.com/user", {
 			headers: {
-				Authorization: `Bearer ${tokens.accessToken}`
+				Accept: "application/vnd.github+json",
+				Authorization: `Bearer ${tokens.accessToken}`,
 			}
 		}).then(async (res) => {
 			console.log(JSON.stringify(res));
