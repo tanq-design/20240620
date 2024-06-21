@@ -33,6 +33,7 @@ export async function GET(context: APIContext): Promise<Response> {
 			}
 		});
 		const githubUser: GitHubUser = await githubUserResponse.json();
+		console.log(githubUser);
 
 		const envDB = context.locals.runtime.env.DB as D1Database
 		const db = drizzle(envDB);
