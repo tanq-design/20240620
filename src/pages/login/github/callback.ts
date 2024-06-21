@@ -9,7 +9,7 @@ import type { Auth } from "lucia"
 import { generateRandomString } from "lucia/utils";
 
 export async function GET(context: APIContext): Promise<Response> {
-	const lucia : Auth = initializeLucia(
+	const lucia: Auth = initializeLucia(
 		context.locals.runtime.env.DB as D1Database,
 		context.locals.runtime.env.PROD,
 	);
@@ -55,9 +55,10 @@ export async function GET(context: APIContext): Promise<Response> {
 			const db = drizzle(envDB);
 			// @ts-ignore
 			const existingUser = await db.select().from(oursession).where(eq(oursession.github_id, githubUser.id));
+			console.log("existingUser", existingUser);
 
 			if (Array.isArray(existingUser) && existingUser[0] && existingUser[0].hasOwnProperty('id')) {
-				return existingUser[0];
+				return await lucia.getUser(existingUser[0].id);
 			}
 			const user = await lucia.createUser({
 				key: null,
@@ -72,25 +73,28 @@ export async function GET(context: APIContext): Promise<Response> {
 		console.log("user", JSON.stringify(user));
 
 		if (user) {
-			const session = await lucia.createSession({ userId: user.userId, attributes:{} });
-			
+			const session = await lucia.createSession({ userId: user.userId, attributes: {} });
+
 			const sessionCookie = lucia.createSessionCookie(session);
 			context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-			
+
 			return context.redirect("/");
 		}
 
 		const userId = generateRandomString(10); // 16 characters long
 
+		await lucia.createUser({ userId: userId, key: null, attributes: {} })
+		/*
 		const envDB = context.locals.runtime.env.DB as D1Database
 		const db = drizzle(envDB);
 		await db.insert(oursession).values({
-			id: userId,
+			userId: userId,
 			github_id: Number(githubUser.id),
 			username: githubUser.login
 		});
+		*/
 
-		const session = await lucia.createSession({ userId: userId, attributes: {} });
+		const session = await lucia.createSession({ userId, attributes: {} });
 		const sessionCookie = lucia.createSessionCookie(session.id);
 
 		context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
