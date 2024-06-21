@@ -48,6 +48,7 @@ export async function GET(context: APIContext): Promise<Response> {
 			}
 			return res.json();
 		});
+		console.log("githubUser", JSON.stringify(githubUser));
 
 		const getUser = async () => {
 			const envDB = context.locals.runtime.env.DB as D1Database
@@ -68,6 +69,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		};
 
 		const user = await getUser();
+		console.log("user", JSON.stringify(user));
 
 		if (user) {
 			const session = await lucia.createSession({ userId: user.id, attributes:{} });
