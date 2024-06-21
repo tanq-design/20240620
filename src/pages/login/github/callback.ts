@@ -33,7 +33,13 @@ export async function GET(context: APIContext): Promise<Response> {
 			headers: {
 				Authorization: `Bearer ${tokens.accessToken}`
 			}
-		});
+		}).then(async (res) => {
+			if (!res.ok) {
+			  console.error(res.status, await res.json());
+			  throw new Error("failed to get github user");
+			}
+			return res;
+		  });
 		console.log("githubUserResponse", JSON.stringify(githubUserResponse));
 		const githubUser: GitHubUser = await githubUserResponse.json();
 		console.log("githubUser", JSON.stringify(githubUser));
