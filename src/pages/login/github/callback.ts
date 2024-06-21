@@ -32,6 +32,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		const githubUserResponse = await fetch("https://api.github.com/user", {
 			headers: {
 				Accept: "application/vnd.github+json",
+				"User-Agent": "oauth-test",
 				Authorization: `Bearer ${tokens.accessToken}`,
 			}
 		}).then(async (res) => {
