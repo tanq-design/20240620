@@ -15,6 +15,7 @@ export async function GET(context: APIContext): Promise<Response> {
 	);
 
 	console.log("github", JSON.stringify(github));
+	console.log("context", JSON.stringify(context));
 
 	const code = context.url.searchParams.get("code");
 	const state = context.url.searchParams.get("state");
