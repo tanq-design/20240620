@@ -1,13 +1,18 @@
-import { github, initializeLucia } from "../../../auth";
+import { initializeLucia } from "../../../auth";
 import { OAuth2RequestError } from "arctic";
 import { generateIdFromEntropySize } from "lucia";
 import { drizzle } from 'drizzle-orm/d1';
 import type { APIContext } from "astro";
 import { sessions } from "../../../db/schema";
 import { eq } from 'drizzle-orm';
+import { GitHub } from "arctic";
 
 export async function GET(context: APIContext): Promise<Response> {
 	const lucia = initializeLucia(context.locals.runtime.env.DB as D1Database);
+	const github = new GitHub(
+		context.locals.runtime.env.GITHUB_CLIENT_ID as string,
+		context.locals.runtime.env.GITHUB_CLIENT_SECRET as string
+	);
 
 	const code = context.url.searchParams.get("code");
 	const state = context.url.searchParams.get("state");
@@ -31,7 +36,6 @@ export async function GET(context: APIContext): Promise<Response> {
 		const db = drizzle(envDB);
 		// @ts-ignore
 		const existingUser = await db.select().from(sessions).where(eq(sessions.github_id, githubUser.id));
-		console.log(existingUser);
 
 		if (Array.isArray(existingUser) && existingUser[0] && existingUser[0].hasOwnProperty('id')) {
 			const session = await lucia.createSession(existingUser[0].id, {});

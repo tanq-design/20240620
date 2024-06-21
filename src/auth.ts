@@ -1,11 +1,5 @@
 import { Lucia } from "lucia";
 import { D1Adapter } from "@lucia-auth/adapter-sqlite";
-import { GitHub } from "arctic";
-
-export const github = new GitHub(
-	import.meta.env.GITHUB_CLIENT_ID,
-	import.meta.env.GITHUB_CLIENT_SECRET
-);
 
 export function initializeLucia(D1: D1Database) {
 	const adapter = new D1Adapter(D1, {
