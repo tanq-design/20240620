@@ -41,7 +41,7 @@ export async function GET(context: APIContext): Promise<Response> {
 			return res.json();
 		  });
 		console.log("githubUserResponse", JSON.stringify(githubUserResponse));
-		const githubUser: GitHubUser = githubUserResponse;
+		const githubUser: GitHubUser = githubUserResponse as GitHubUser;
 		console.log("githubUser", JSON.stringify(githubUser));
 
 		const envDB = context.locals.runtime.env.DB as D1Database
