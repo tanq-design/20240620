@@ -14,9 +14,6 @@ export async function GET(context: APIContext): Promise<Response> {
 		context.locals.runtime.env.GITHUB_CLIENT_SECRET as string
 	);
 
-	console.log("github", JSON.stringify(github));
-	//console.log("context", JSON.stringify(context));
-
 	const code = context.url.searchParams.get("code");
 	const state = context.url.searchParams.get("state");
 	const storedState = context.cookies.get("github_oauth_state")?.value ?? null;
@@ -28,7 +25,6 @@ export async function GET(context: APIContext): Promise<Response> {
 
 	try {
 		const tokens = await github.validateAuthorizationCode(code);
-		console.log("tokens", JSON.stringify(tokens));
 		const githubUser: GitHubUser = await fetch("https://api.github.com/user", {
 			headers: {
 				Accept: "application/vnd.github+json",
@@ -36,20 +32,17 @@ export async function GET(context: APIContext): Promise<Response> {
 				Authorization: `Bearer ${tokens.accessToken}`,
 			}
 		}).then(async (res) => {
-			console.log(JSON.stringify(res));
 			if (!res.ok) {
 			  console.error(res.status, await res.json());
 			  throw new Error("failed to get github user");
 			}
 			return res.json();
 		  });
-		console.log("githubUser", JSON.stringify(githubUser));
 
 		const envDB = context.locals.runtime.env.DB as D1Database
 		const db = drizzle(envDB);
 		// @ts-ignore
 		const existingUser = await db.select().from(sessions).where(eq(sessions.github_id, githubUser.id));
-		console.log("existingUser", JSON.stringify(existingUser));
 		if (Array.isArray(existingUser) && existingUser[0] && existingUser[0].hasOwnProperty('id')) {
 			const session = await lucia.createSession(existingUser[0].id, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
