@@ -14,14 +14,10 @@ export async function GET(context: APIContext): Promise<Response> {
 		context.locals.runtime.env.PROD,
 	);
 
-	console.log("lucia", JSON.stringify(lucia));
-
 	const github = new GitHub(
 		context.locals.runtime.env.GITHUB_CLIENT_ID as string,
 		context.locals.runtime.env.GITHUB_CLIENT_SECRET as string
 	);
-
-	console.log("github", JSON.stringify(github));
 
 	const code = context.url.searchParams.get("code");
 	const state = context.url.searchParams.get("state");
@@ -48,14 +44,12 @@ export async function GET(context: APIContext): Promise<Response> {
 			}
 			return res.json();
 		});
-		console.log("githubUser", JSON.stringify(githubUser));
 
 		const getUser = async () => {
 			const envDB = context.locals.runtime.env.DB as D1Database
 			const db = drizzle(envDB);
 			// @ts-ignore
 			const existingUser = await db.select().from(oursession).where(eq(oursession.github_id, githubUser.id));
-			console.log("existingUser", existingUser);
 
 			if (Array.isArray(existingUser) && existingUser[0] && existingUser[0].hasOwnProperty('id')) {
 				return await lucia.getUser(existingUser[0].id);
@@ -70,7 +64,6 @@ export async function GET(context: APIContext): Promise<Response> {
 		};
 
 		const user = await getUser();
-		console.log("user", JSON.stringify(user));
 
 		if (user) {
 			const session = await lucia.createSession({ userId: user.userId, attributes: {} });
@@ -103,12 +96,12 @@ export async function GET(context: APIContext): Promise<Response> {
 		// the specific error message depends on the provider
 		if (e instanceof OAuth2RequestError) {
 			// invalid code
-			console.log("catch the error400", e);
+			console.error("catch the error400", e);
 			return new Response(null, {
 				status: 400
 			});
 		}
-		console.log("catch the error500", e);
+		console.error("catch the error500", e);
 		return new Response(null, {
 			status: 500
 		});

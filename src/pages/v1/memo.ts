@@ -26,14 +26,14 @@ export async function POST({ request, locals }: { request: Request, locals: Runt
     const message: PostData = await request.json();
 
     if (!message) {
-        console.log("POST data is empty!");
+        console.error("POST data is empty!");
         return new Response(null, {
             status: 500,
         });
     }
 
     if (!message.hasOwnProperty('title') || !message.hasOwnProperty('content')) {
-        console.log("POST data is invalid!");
+        console.error("POST data is invalid!");
         return new Response(null, {
             status: 500,
         });
@@ -47,7 +47,7 @@ export async function POST({ request, locals }: { request: Request, locals: Runt
     const result = await db.insert(memos).values({ title, content });
 
     if (!result.success) {
-        console.log("DB insert failed!");
+        console.error("DB insert failed!");
         return new Response(null, {
             status: 500,
         });
